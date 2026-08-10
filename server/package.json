@@ -1,0 +1,17 @@
+{
+  "name": "newbiehub-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Backend do NewbieHub: busca dados de um repositório público do GitHub e usa o Ollama Cloud para gerar uma explicação em linguagem simples.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

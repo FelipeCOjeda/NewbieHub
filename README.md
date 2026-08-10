@@ -34,15 +34,28 @@ Ele tenta responder, em linguagem simples:
 
 ## Rodando localmente
 
-Baixe o arquivo `index.html` e abra no navegador.
+**Modo simples (sem IA):** baixe o arquivo `index.html` e abra no navegador. Sem backend, a explicação usa uma heurística local por palavra-chave — mais rápida de rodar, mas mais rasa e sujeita a erro.
 
-Não há backend no MVP atual.
+**Com o motor de análise via IA (recomendado):**
+
+```
+cd server
+npm install
+cp .env.example .env   # preencha OLLAMA_API_KEY (ollama.com) e, opcionalmente, GITHUB_TOKEN
+npm start
+```
+
+Abra `http://localhost:8460` (ou a porta definida em `PORT`). O backend serve o próprio `index.html`, busca os dados do repositório no GitHub e usa o [Ollama Cloud](https://ollama.com) para gerar a explicação em linguagem simples — seguindo os mesmos princípios listados acima (nunca inventar certeza, nunca confundir popularidade com segurança etc.), em vez de casar palavras-chave.
+
+Se `OLLAMA_API_KEY` não for configurada, ou se a chamada à IA falhar por qualquer motivo, o backend cai automaticamente para a heurística local — o site nunca fica fora do ar por causa da IA. O frontend também tem esse mesmo fallback caso o backend esteja fora do ar (ex.: quando `index.html` é aberto direto do disco, sem servidor).
+
+## Motor de análise
+
+A heurística por palavra-chave (`profile()` no `index.html`, espelhada em `server/heuristic.js`) foi o motor original do MVP. Ela ainda existe como rede de segurança, mas o motor principal agora é o Ollama Cloud (`server/ollama.js`): ele recebe descrição, tópicos, linguagem e um trecho do README, e é instruído a seguir os princípios do projeto — inclusive a dizer explicitamente quando não há evidência suficiente para uma explicação confiável (`uncertain: true`), em vez de arriscar um palpite.
 
 ## Limitações atuais
 
-A análise ainda usa heurísticas no navegador. A evolução planejada é ter um motor de análise que considere em conjunto README, documentação, releases, estrutura do projeto, issues e mudanças relevantes, produzindo uma explicação nova escrita para leigos — e não apenas resumindo o README.
-
-A API pública do GitHub também possui limites de requisição quando usada sem autenticação.
+A API pública do GitHub possui limites de requisição quando usada sem autenticação (60/hora por IP); configure `GITHUB_TOKEN` no backend para subir esse limite para 5000/hora.
 
 ## Segurança
 

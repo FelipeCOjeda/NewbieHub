@@ -1,0 +1,16 @@
+[Unit]
+Description=NewbieHub API (backend Ollama + GitHub)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=felipe
+WorkingDirectory=/home/felipe/Bots/NewbieHub/server
+EnvironmentFile=/home/felipe/Bots/NewbieHub/server/.env
+ExecStart=/usr/bin/node index.js
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
